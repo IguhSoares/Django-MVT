@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
-from AppMVT.forms import ContactForm, LanguagesForm
+from AppMVT.forms import ContactForm, LanguagesForm, SearchLanguageForm
 from AppMVT.models import Contact, Languages
 from django.http import HttpResponse, HttpResponseRedirect
-
 
 def inicioApp(request):
     return render(request, "AppMVT/inicioApp.html")
@@ -12,25 +11,24 @@ def about(request):
     return render(request, 'AppMVT/about.html')
 
 def languages(request, language=False):
+    search_form = SearchLanguageForm()
     if language:
-        lang = Languages.objects.get(language__icontains=language)
+        result = Languages.objects.filter(language__icontains=language)
         return render(
             request,
             'AppMVT/languages.html',
-            {'language': lang.language, 'text': lang.text}
+            {'result': result}
         )
     else:
-        return render(request,'AppMVT/languages.html')
+        return render(request,'AppMVT/languages.html', {'form': search_form})
 
 def searchlanguages(request):
     if request.GET["language"]:
-        language=request.GET["language"]
+        lang=request.GET["language"]
         # text=Languages.objects.filter(language=language)
-        return redirect(languages, language=language)
+        return redirect(languages, language=lang)
     else:
-        respuesta="No enviaste datos"
-
-    return HttpResponse(respuesta)
+        return render(request,'AppMVT/languages.html', {'msg': "No enviaste datos"})
 
 def contactform(request):
     if request.method == 'POST':
