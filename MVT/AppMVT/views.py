@@ -21,9 +21,13 @@ def languages(request, language=False):
         
         if exact_match:
             result = Languages.objects.filter(language__iexact=exact_match)
+
         else:
             result = Languages.objects.filter(language__icontains=language)
         
+        if not result:
+            return render(request, 'AppMVT/languages.html', {'no_result': True})
+
         return render(
             request,
             'AppMVT/languages.html',
