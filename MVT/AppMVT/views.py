@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from AppMVT.forms import ContactForm, LanguagesForm, SearchLanguageForm
 from AppMVT.models import Contact, Languages
 from django.http import HttpResponse, HttpResponseRedirect
+import re
 
 def inicioApp(request):
     return render(request, "AppMVT/inicioApp.html")
@@ -13,12 +14,20 @@ def about(request):
 def languages(request, language=False):
     search_form = SearchLanguageForm()
     if language:
-        result = Languages.objects.filter(language__icontains=language)
+        regex = re.compile(r'^"(.+)"$')
+        exact_match = False
+        for match in regex.finditer(language):
+            exact_match = match.group(1)
+        
+        if exact_match:
+            result = Languages.objects.filter(language__iexact=exact_match)
+        else:
+            result = Languages.objects.filter(language__icontains=language)
+        
         return render(
             request,
             'AppMVT/languages.html',
-            {'result': result}
-        )
+            {'result': result})
     else:
         return render(request,'AppMVT/languages.html', {'form': search_form})
 
