@@ -8,7 +8,9 @@ class Contact(models.Model):
 
     def __unicode__(self):
         return self.full_name
-    
+
+
+
 class Languages(models.Model):
      language=models.CharField(max_length=50)
      text=models.CharField(max_length=600)
