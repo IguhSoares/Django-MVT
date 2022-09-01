@@ -4,7 +4,7 @@
 <div style="margin: 8em"></div>
 {% endblock %} {% block contenidoQueCambia %}
 <section class="page-section portfolio" style="margin: 0 auto" id="language">
-  <div class="container" ; style="margin: 5em auto">
+  <div class="container" style="margin: 5em auto">
     <h2
       class="page-section-heading text-center text-uppercase text-secondary mb-0"
     >
@@ -20,11 +20,23 @@
       Busque un lenguaje y descubra más acerca de el
     </h4>
   </div>
-  {% if language %}
-  <div class="portfolio-item mx-auto">
-    <p class="text-center">{{ language }}</p>
-    <p>{{ text }}</p>
+  {% if result %}
+  <div class="portfolio-item mx-auto" style="max-width: 30rem">
+    <ul style="list-style: none;">
+      {% for lang in result %}
+      <li style="margin-bottom: 3.5em">
+        <h4 class="text-center">{{ lang.language }}</h3>
+        <p style="text-align:justify; font-size: 17px;">{{ lang.text }}</p>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
+
+  {% elif msg %}
+  <div class="portfolio-item mx-auto">
+    <p class="text-center">{{ msg }}</p>
+  </div>
+
   {% endif %}
   <form
     action="/AppMVT/buscarlenguajes"
@@ -39,13 +51,25 @@
       "
     >
       <label for="language">
+        {% if msg %}
         <input
           class="form-control text-center"
           placeholder="Nombre del lenguaje"
           type="text"
           name="language"
           id="language"
-      /></label>
+          style="border-color: red"
+        />
+        {% else %}
+        <input
+          class="form-control text-center"
+          placeholder="Nombre del lenguaje"
+          type="text"
+          name="language"
+          id="language"
+        />
+        {% endif %}
+      </label>
     </p>
     <p style="text-align: center">
       <input class="btn btn-primary" type="submit" value="Buscar" />
